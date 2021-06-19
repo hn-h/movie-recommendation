@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateView
 from movieApp.models import Movie,MovieIDs
+from movieApp.forms import FilterForm
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup as BSoup
@@ -48,3 +49,31 @@ def scrape(request,suggested_movie_id):
 class MovieDetailView(DetailView):
     """Our main view of each suggested movie"""
     model=Movie
+
+def formView(request):
+    """Form handling to get user preferences"""
+    form = FilterForm()
+    if request.method=='POST':
+        form = FilterForm(request.POST)
+        if form.is_valid():
+            year=form.cleaned_data['year']
+            genre=form.cleaned_data['genres']
+            rate=form.cleaned_data['rate']
+            votes=form.cleaned_data['votes']
+            suggested_movies=getMovies(genre,year,rate,votes)
+            MovieIDs.objects.all().delete()
+            Movie.objects.all().delete()
+
+            for id in random.sample(suggested_movies,100):
+                moviesIDs=MovieIDs()
+                moviesIDs.movId=id
+                moviesIDs.save()
+            scrape(request,str(MovieIDs.objects.first()))
+            return redirect('movie_detail',pk=Movie.objects.first().pk)
+
+    return render(request,'movieApp/index.html',context={'form':form})
+
+def nextMov(request):
+    """Getting the next suggested movie"""
+    scrape(request,str(MovieIDs.objects.first()))
+    return redirect('movie_detail', pk=Movie.objects.last().pk)

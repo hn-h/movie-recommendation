@@ -1,6 +1,9 @@
 from django.test import TestCase
-from .models import Movie
+from django.urls import reverse
+from .models import Movie, MovieIDs
 from movieApp import views
+
+FORM_URL=reverse("home")
 
 class TestMovie(TestCase):
     """General test cases for the project"""
@@ -24,3 +27,15 @@ class TestMovie(TestCase):
     def test_get_movies(self):
         movies = views.getMovies('Action',2000,8,30000)
         self.assertTrue(movies)
+
+    def test_form_and_scrape(self):
+        """Test that form gets the inputs normally and pass the scrape"""
+        form_data={
+            'year':2000,
+            'rate':8,
+            'genres':'Action',
+            'votes':30000
+        }
+
+        request = self.client.post(FORM_URL,form_data)
+        self.assertTrue(getattr(MovieIDs.objects.first(), 'movId'))
