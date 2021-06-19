@@ -1,0 +1,71 @@
+{%extends 'movieApp/base.html'%}
+{%block content%}
+<form method="POST" >
+  {{ form.errors }}
+  {{ form.non_field_errors }}
+  {%csrf_token%}
+  <div class="mb-3">
+    {{ form.year.errors }}
+    <label for="{{form.year.id_for_label}}" class="form-label fs-4">Year</label>
+    <input type="number" class="form-control" name="{{form.year.html_name}}" id="{{form.year.id_for_label}}" placeholder="1960">
+    <div id="yearHelp" class="form-text">Enter the year to get only movies which was made after that year.</div>
+  </div>
+
+  <div class="mb-3">
+    {{ form.genres.errors }}
+    <label for="{{form.genres.id_for_label}}" class="form-label fs-4">Genre</label>
+    <!-- <input type="text" class="form-control" name="{{form.genres.html_name}}" id="{{form.genres.id_for_label}}"> -->
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="{{form.genres.html_name}}" value='Action' id="id_genres_0">
+      <label class="form-check-label" for="id_genres_0">Action</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="{{form.genres.html_name}}" value='Comedy' id="id_genres_1">
+      <label class="form-check-label" for="id_genres_1">Comedy</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="{{form.genres.html_name}}" value='Drama' id="id_genres_2">
+      <label class="form-check-label" for="id_genres_2">Drama</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="{{form.genres.html_name}}" value='Sci-Fi' id="id_genres_3">
+      <label class="form-check-label" for="id_genres_3">Sci-Fi</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="{{form.genres.html_name}}" value='Horror' id="id_genres_4">
+      <label class="form-check-label" for="id_genres_4">Horror</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="{{form.genres.html_name}}" value='Animation' id="id_genres_5">
+      <label class="form-check-label" for="id_genres_5">Animation</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="{{form.genres.html_name}}" value='Fantasy' id="id_genres_6">
+      <label class="form-check-label" for="id_genres_6">Fantasy</label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="{{form.genres.html_name}}" value='Documentary' id="id_genres_7">
+      <label class="form-check-label" for="id_genres_7">Documentary</label>
+    </div>
+    <!-- <div id="genreHelp" class="form-text">You can input genre as: Action, Drama, Comedy...</div> -->
+    <!-- {{form.genres}} -->
+  </div>
+
+  <div class="mb-3">
+    {{ form.rate.errors }}
+    <label for="{{form.rate.id_for_label}}" class="form-label fs-4">Rate</label>
+    <output class="badge bg-secondary fs-4 position-absolute start-50 translate-middle-x">5</output>
+    <input type="range" class="form-range" name="{{form.rate.html_name}}" min="0" max="10" step="1" id="{{form.rate.id_for_label}}" oninput="this.previousElementSibling.value = this.value">
+    <div id="genreHelp" class="form-text">Enter the minimum rate of movies you want.</div>
+  </div>
+
+  <div class="mb-3">
+    {{ form.votes.errors }}
+    <label for="{{form.votes.id_for_label}}" class="form-label fs-4">Number of Votes</label>
+    <input type="number" class="form-control" name="{{form.votes.html_name}}" id="{{form.votes.id_for_label}}" placeholder="20000">
+    <div id="votesHelp" class="form-text">Enter the minimum number of votes the movie has (based on IMDB website).</div>
+  </div>
+
+  <input class="btn btn-success" type="submit" value="Suggest">
+</form>
+{%endblock%}

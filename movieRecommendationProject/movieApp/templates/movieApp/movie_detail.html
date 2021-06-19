@@ -1,0 +1,56 @@
+{%extends 'movieApp/base.html'%}
+{% load humanize %}
+{%block content%}
+  <div class="d-grid gap-2 col-6 mx-auto button">
+    <a class="btn btn-success btn-lg" href="{%url 'next' %}">Suggest Again</a>
+  </div>
+  <h1>{{movie.name}} ({{movie.year}})</h1>
+  <a href={{movie.link}} class='imdblink'></a>
+  <div class="progress" style="height: 50px;">
+    <div class="progress-bar progress-bar-striped bg-dark" role="progressbar" style="width:calc({{movie.rate}}% * 10);" aria-valuenow="{{movie.rate}}" aria-valuemin="0" aria-valuemax="10"><h2>{{movie.rate}}</h2></div>
+  </div>
+
+  <div class="row g-0 bg-light position-relative">
+  <div class="col-md-6 mb-md-0 p-md-4">
+    <img src="{{movie.image}}" class="w-100 poster" alt="Poster">
+  </div>
+  <div class="col-md-6 p-4 ps-md-0">
+    <div class="card">
+      <div class="card-header">
+    <h3>Genres</h3>
+      </div>
+      <div class='card-body'>
+         <h4 class="text-center">{{movie.genres|cut:'['|cut:']'|cut:"'"}}</h4>
+      </div>
+    </div>
+    <br><br>
+    <div class="card">
+      <div class="card-header">
+    <h3>IMDB Rate</h3>
+      </div>
+      <div class='card-body'>
+         <h4 class="text-center">{{movie.rate}}</h4>
+      </div>
+    </div>
+    <br><br>
+    <div class="card">
+      <div class="card-header">
+    <h3>Votes</h3>
+      </div>
+      <div class='card-body'>
+         <h4 class="text-center">{{movie.votes|intcomma}}</h4>
+      </div>
+    </div>
+    <br><br>
+    <div class="card">
+      <div class="card-header">
+      <h3>Plot</h3>
+      </div>
+      <div class='card-body'>
+        <p>{{movie.plot}}</p>
+      </div>
+    </div>
+    <a href="{{movie.link}}"><img src="https://logo-logos.com/wp-content/uploads/2016/11/IMDb_logo_logotype.png" alt="IMDb logo" width='80px' height="65px"/></a>
+  </div>
+</div>
+{%endblock%}
