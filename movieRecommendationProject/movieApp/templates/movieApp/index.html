@@ -1,13 +1,14 @@
 {%extends 'movieApp/base.html'%}
 {%block content%}
 <form method="POST" >
+  <br>
   {{ form.errors }}
   {{ form.non_field_errors }}
   {%csrf_token%}
   <div class="mb-3">
     {{ form.year.errors }}
     <label for="{{form.year.id_for_label}}" class="form-label fs-4">Year</label>
-    <input type="number" class="form-control" name="{{form.year.html_name}}" id="{{form.year.id_for_label}}" placeholder="1960">
+    <input type="number" class="form-control" name="{{form.year.html_name}}" id="{{form.year.id_for_label}}" placeholder="1980">
     <div id="yearHelp" class="form-text">Enter the year to get only movies which was made after that year.</div>
   </div>
 
@@ -62,10 +63,19 @@
   <div class="mb-3">
     {{ form.votes.errors }}
     <label for="{{form.votes.id_for_label}}" class="form-label fs-4">Number of Votes</label>
-    <input type="number" class="form-control" name="{{form.votes.html_name}}" id="{{form.votes.id_for_label}}" placeholder="20000">
-    <div id="votesHelp" class="form-text">Enter the minimum number of votes the movie has (based on IMDB website).</div>
+    <select class="form-select" aria-label="Default select example" name="{{form.votes.html_name}}" id="{{form.votes.id_for_label}}">
+      <option selected>Select number of votes</option>
+      <option value="20000">More that 20,000</option>
+      <option value="50000">More that 50,000</option>
+      <option value="100000">More that 100,000</option>
+      <option value="200000">More that 200,000</option>
+    </select>
   </div>
 
   <input class="btn btn-success" type="submit" value="Suggest">
 </form>
+<br>
+<br>
+<br>
+<br>
 {%endblock%}

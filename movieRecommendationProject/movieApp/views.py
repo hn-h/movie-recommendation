@@ -59,12 +59,12 @@ def formView(request):
             year=form.cleaned_data['year']
             genre=form.cleaned_data['genres']
             rate=form.cleaned_data['rate']
-            votes=form.cleaned_data['votes']
+            votes=int(form.cleaned_data['votes'])
             suggested_movies=getMovies(genre,year,rate,votes)
             MovieIDs.objects.all().delete()
             Movie.objects.all().delete()
-
-            for id in random.sample(suggested_movies,100):
+            sample_length = 100 if len(suggested_movies)>=100 else len(suggested_movies)
+            for id in random.sample(suggested_movies,sample_length):
                 moviesIDs=MovieIDs()
                 moviesIDs.movId=id
                 moviesIDs.save()
