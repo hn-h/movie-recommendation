@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .models import Movie
+from movieApp import views
 
 class TestMovie(TestCase):
     """General test cases for the project"""
@@ -19,3 +20,7 @@ class TestMovie(TestCase):
 
         self.assertEqual(getattr(Movie.objects.first(), 'name'), 'Movie Name')
         self.assertEqual(getattr(Movie.objects.first(), 'movieID'), 'ID5321')
+
+    def test_get_movies(self):
+        movies = views.getMovies('Action',2000,8,30000)
+        self.assertTrue(movies)
