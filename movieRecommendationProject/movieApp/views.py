@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic.detail import DetailView
 from django.views.generic.base import TemplateView
-from movieApp.models import Movie,MovieIDs
+from movieApp.models import Movie,MovieIDs,MovieDB
 from movieApp.forms import FilterForm
 import pandas as pd
 import requests
@@ -9,16 +9,30 @@ from bs4 import BeautifulSoup as BSoup
 import json
 import random
 
-def loadData():
+
+def loadData_in_DB():
     """Load the data file which we will movie ID from to start Scraping"""
     df=pd.read_csv('movieApp/new_imdb_dataset.csv', header=0, dtype='unicode')
-    return df
+    for _,movie in df.iterrows():
+        new_movie=MovieDB()
+        new_movie.movieID=movie.tconst
+        new_movie.year=movie.startYear
+        new_movie.genres=movie.genres
+        new_movie.rate=movie.averageRating
+        new_movie.votes=movie.numVotes
+        new_movie.save()
 
 def getMovies(genre,year,rate,votes):
     """Filter the data by user preferences and retern movies IDs"""
-    df=loadData()
-    suggested_df=df[(df.genres.str.contains(genre,na=False))&(df.startYear.astype(int)>=year)&(df.averageRating.astype(float)>=rate)&(df.numVotes.astype(int)>=votes)]
-    return(list(suggested_df.tconst))
+    if not MovieDB.objects.exists():
+        loadData_in_DB()
+
+    suggested_query = MovieDB.objects.filter(genres__contains=genre) \
+                                     .filter(year__gte=year) \
+                                     .filter(rate__gte=rate) \
+                                     .filter(votes__gte=votes)
+
+    return(list(suggested_query.values('movieID')))
 
 def scrape(request,suggested_movie_id):
     """Using Movie ID to Scrape IMDB website, get needed movie data and save in Movie model"""
@@ -64,9 +78,9 @@ def formView(request):
             MovieIDs.objects.all().delete()
             Movie.objects.all().delete()
             sample_length = 100 if len(suggested_movies)>=100 else len(suggested_movies)
-            for id in random.sample(suggested_movies,sample_length):
+            for mov in random.sample(suggested_movies,sample_length):
                 moviesIDs=MovieIDs()
-                moviesIDs.movId=id
+                moviesIDs.movId=mov['movieID']
                 moviesIDs.save()
             scrape(request,str(MovieIDs.objects.first()))
             return redirect('movie_detail',pk=Movie.objects.first().pk)

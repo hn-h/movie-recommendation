@@ -20,3 +20,13 @@ class MovieIDs(models.Model):
     movId=models.CharField(max_length=30)
     def __str__(self):
         return self.movId
+
+class MovieDB(models.Model):
+    movieID=models.CharField(max_length=30)
+    year=models.IntegerField()
+    genres=models.CharField(max_length=30)
+    rate=models.FloatField()
+    votes=models.IntegerField()
+
+    def __str__(self):
+        return self.movieID
